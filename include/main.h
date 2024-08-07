@@ -75,6 +75,7 @@ void opcontrol(void);
  * You can add C++-only headers here
  */
 //#include <iostream>
+#include "globals.h"
 #endif
 
 #endif  // _PROS_MAIN_H_
