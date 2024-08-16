@@ -1,6 +1,17 @@
 #ifndef GLOBALS_H
 #define GLOBALS_H
 
+/////////////////
+////CONSTANTS////
+/////////////////
+
+/* Chassis Info */
+extern const double gear_ratio, wheel_size, wheel_circ;
+
+/////////////////
+/////DEVICES/////
+/////////////////
+
 /* Controller*/
 extern pros::Controller master;
 

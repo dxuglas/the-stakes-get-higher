@@ -1,15 +1,16 @@
 #include "main.h"
 
-class Controls {
-	#define INTAKE_FORWARD pros::E_CONTROLLER_DIGITAL_L1
-	#define INTAKE_REVERSE pros::E_CONTROLLER_DIGITAL_L2
-	#define LIFT_UP pros::E_CONTROLLER_DIGITAL_R1
-	#define LIFT_DOWN pros::E_CONTROLLER_DIGITAL_R2
+#define INTAKE_FORWARD pros::E_CONTROLLER_DIGITAL_L1
+#define INTAKE_REVERSE pros::E_CONTROLLER_DIGITAL_L2
+#define LIFT_UP pros::E_CONTROLLER_DIGITAL_R1
+#define LIFT_DOWN pros::E_CONTROLLER_DIGITAL_R2
 
+class Controls {
 	public:
 		void update() {
 			update_drive();
 			update_intake();
+			update_lift();
 		}
 	private:
 		int drive_direction = 1; 
@@ -22,8 +23,8 @@ class Controls {
 				drive_direction *= -1;
 			}
 
-			float left_y = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
-			float right_y = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
+			double left_y = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
+			double right_y = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
 			if (left_y < left_joystick_dead_zone) left_y = 0; // Left dead zone
 			if (right_y < right_joystick_dead_zone) right_y = 0; // Right dead zone
@@ -41,12 +42,22 @@ class Controls {
 				intake.move(0);
 			}
 		}
+
+		void update_lift() {
+			if (master.get_digital(LIFT_UP)) {
+				lift.move(127);
+			} else if (master.get_digital(LIFT_DOWN)) {
+				lift.move(-127);
+			} else {
+				lift.move(0);
+			}
+		}
 };
 
 void opcontrol() {
 	Controls controls;
  	while (true) {
 		controls.update();
-		pros::delay(10);
+		pros::delay(5);
 	}
 }

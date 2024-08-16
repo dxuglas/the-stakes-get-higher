@@ -1,12 +1,25 @@
 #include "main.h"
 
-// Sensors
+/////////////////
+////CONSTANTS////
+/////////////////
+
+/* Chassis Info */
+const double gear_ratio = (5 / 3);
+const double wheel_diameter = 3.25;
+const double wheel_circ = 3.14159 * wheel_diameter;
+
+/////////////////
+/////DEVICES/////
+/////////////////
+
+/* Sensors */
 #define PORT_IMU 1
 #define PORT_LIFT_POT 'A'
-// Pneumatics
+/* Pneumatics */
 #define PORT_GOAL_CLAMP 'B'
 #define PORT_INTAKE_RISER 'C'
-// Motors
+/* Motors */
 #define PORT_DRIVE_LEFT_FRONT 8
 #define PORT_DRIVE_LEFT_MID 9
 #define PORT_DRIVE_LEFT_BACK 10
