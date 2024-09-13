@@ -1,9 +1,10 @@
 #include "main.h"
 
-#define INTAKE_FORWARD pros::E_CONTROLLER_DIGITAL_L1
-#define INTAKE_REVERSE pros::E_CONTROLLER_DIGITAL_L2
-#define LIFT_UP pros::E_CONTROLLER_DIGITAL_R1
-#define LIFT_DOWN pros::E_CONTROLLER_DIGITAL_R2
+#define INTAKE_FORWARD pros::E_CONTROLLER_DIGITAL_R1
+#define INTAKE_REVERSE pros::E_CONTROLLER_DIGITAL_R2
+#define LIFT_UP pros::E_CONTROLLER_DIGITAL_L1
+#define LIFT_DOWN pros::E_CONTROLLER_DIGITAL_L2
+#define GOAL_CLAMP pros::E_CONTROLLER_DIGITAL_B
 
 class Controls {
 	public:
@@ -11,11 +12,12 @@ class Controls {
 			update_drive();
 			update_intake();
 			update_lift();
+			update_clamp();
 		}
 	private:
 		int drive_direction = 1; 
-		int left_joystick_dead_zone = 1;
-		int right_joystick_dead_zone = 1;
+		int left_joystick_dead_zone = 10;
+		int right_joystick_dead_zone = 10;
 
 		void update_drive() {
 			if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)) {
@@ -26,11 +28,11 @@ class Controls {
 			double left_y = master.get_analog(pros::E_CONTROLLER_ANALOG_LEFT_Y);
 			double right_y = master.get_analog(pros::E_CONTROLLER_ANALOG_RIGHT_Y);
 
-			if (left_y < left_joystick_dead_zone) left_y = 0; // Left dead zone
-			if (right_y < right_joystick_dead_zone) right_y = 0; // Right dead zone
+			if (abs(left_y) < left_joystick_dead_zone) left_y = 0; // Left dead zone
+			if (abs(right_y) < right_joystick_dead_zone) right_y = 0; // Right dead zone
 			
-			drive_left.move(left_y * drive_direction * 127); // Left drive velocity
-			drive_right.move(right_y * drive_direction * 127); // Right drive velocity
+			drive_left.move(left_y * drive_direction); // Left drive velocity
+			drive_right.move(right_y * drive_direction); // Right drive velocity
 		}
 
 		void update_intake() {
@@ -50,6 +52,12 @@ class Controls {
 				lift.move(-127);
 			} else {
 				lift.move(0);
+			}
+		}
+
+		void update_clamp () {
+			if (master.get_digital_new_press(GOAL_CLAMP)) {
+				goal_clamp.toggle();
 			}
 		}
 };

@@ -186,10 +186,33 @@ private:
   }
 };
 
+
+
 // Primary chassis controller for autonomous functions
 ChassisController chassis(0, 0, 0, 0, 0, 0);
 
 void autonomous()
 {
   chassis.start(); // Start chassis task
+
+  switch (selected_auton) {
+    case -4:
+      break;
+    case -3:
+      break;
+    case -2:
+      break;
+    case -1:
+      break;
+    case 0:
+      break;
+    case 1:
+      break;
+    case 2:
+      break;
+    case 3:
+      break;
+    case 4:
+      break;
+  }
 }

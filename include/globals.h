@@ -2,11 +2,14 @@
 #define GLOBALS_H
 
 /////////////////
-////CONSTANTS////
+////Variables////
 /////////////////
 
 /* Chassis Info */
 extern const double gear_ratio, wheel_size, wheel_circ;
+
+/* Autonomous */
+extern int selected_auton;
 
 /////////////////
 /////DEVICES/////

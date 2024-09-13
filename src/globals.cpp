@@ -1,13 +1,16 @@
 #include "main.h"
 
 /////////////////
-////CONSTANTS////
+////VARIABLES////
 /////////////////
 
 /* Chassis Info */
 const double gear_ratio = (5 / 3);
 const double wheel_diameter = 3.25;
 const double wheel_circ = 3.14159 * wheel_diameter;
+
+/* Autonomous */
+int selected_auton = 0;
 
 /////////////////
 /////DEVICES/////
@@ -17,16 +20,16 @@ const double wheel_circ = 3.14159 * wheel_diameter;
 #define PORT_IMU 1
 #define PORT_LIFT_POT 'A'
 /* Pneumatics */
-#define PORT_GOAL_CLAMP 'B'
+#define PORT_GOAL_CLAMP 'H'
 #define PORT_INTAKE_RISER 'C'
 /* Motors */
-#define PORT_DRIVE_LEFT_FRONT 8
-#define PORT_DRIVE_LEFT_MID 9
-#define PORT_DRIVE_LEFT_BACK 10
-#define PORT_DRIVE_RIGHT_FRONT 18
-#define PORT_DRIVE_RIGHT_MID 19
-#define PORT_DRIVE_RIGHT_BACK 20
-#define PORT_INTAKE 6
+#define PORT_DRIVE_LEFT_FRONT -13
+#define PORT_DRIVE_LEFT_MID -12
+#define PORT_DRIVE_LEFT_BACK -11
+#define PORT_DRIVE_RIGHT_FRONT 3
+#define PORT_DRIVE_RIGHT_MID 2
+#define PORT_DRIVE_RIGHT_BACK 1
+#define PORT_INTAKE 20
 #define PORT_LIFT 7
 
 /* Master */
