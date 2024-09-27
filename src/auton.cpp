@@ -38,6 +38,10 @@ public:
   { // Turn relative to the current heading (in degrees)
     turn_reset = true;
     angle = degrees;
+    while (abs(turn_error) > 1)
+    {
+      pros::Task::delay(1);
+    }
   }
 
   void turn_absolute(double heading)
@@ -59,12 +63,20 @@ public:
     }
 
     angle = degrees;
+    while (abs(turn_error) > 1)
+    {
+      pros::Task::delay(1);
+    }
   }
 
-  void move(double distance_)
+  void move(double distance_in_inches)
   { // Move the drive a set distance
     drive_reset = true;
-    distance = distance_;
+    distance = distance_in_inches;
+    while (abs(drive_error) > 1)
+    {
+      pros::Task::delay(1);
+    }
   }
 
   void enable()
@@ -112,8 +124,8 @@ private:
       int linear_velocity = linear_controller();
       int angular_velocity = angular_controller();
 
-      drive_left.move(linear_velocity - angular_velocity);
-      drive_right.move(linear_velocity + angular_velocity);
+      drive_left.move_voltage(linear_velocity - angular_velocity);
+      drive_right.move_voltage(linear_velocity + angular_velocity);
     }
   }
 
@@ -143,14 +155,8 @@ private:
     drive_derivative = drive_error - drive_last_error;
     drive_last_error = drive_error;
 
-    if (abs(drive_error) < integral_bound)
-    { // Start integral accumulation once error is past integral bound
-      drive_integral += drive_error;
-    }
-    else
-    { // Otherwise reset the integral
-      drive_integral = 0;
-    }
+    // Start integral accumulation once error is past integral bound, otherwise reset the integral
+    drive_integral = abs(drive_error) < integral_bound ? drive_integral + drive_error : 0;
 
     // If integral is above it's limit, decrease it to limit. 
     drive_integral = abs(drive_integral) > integral_limit ? sign_value(drive_integral) * integral_limit : drive_integral;
@@ -170,31 +176,38 @@ private:
     turn_derivative = turn_error - turn_last_error;
     turn_last_error = turn_error;
 
-    if (abs(turn_error) < integral_bound)
-    { // Start integral accumulation once error is past integral bound
-      turn_integral += turn_error;
-    }
-    else
-    { // Otherwise reset the integral
-      turn_integral = 0;
-    }
+    // Start integral accumulation once error is past integral bound, otherwise reset the integral
+    turn_integral = abs(turn_error) < integral_bound ? turn_integral + turn_error : 0;
 
-    // If integral is above it's limit, decrease it to limit. 
+    // If integral is outside it's limit, decrease/increase it to limit. 
     turn_integral = abs(turn_integral) > integral_limit ? sign_value(turn_integral) * integral_limit : turn_integral;
 
     return turn_error * turn_kp + turn_integral * turn_ki + turn_derivative * turn_kd;
   }
 };
 
-
-
 // Primary chassis controller for autonomous functions
-ChassisController chassis(0, 0, 0, 0, 0, 0);
+ChassisController chassis(
+  0, // Drive Kp 
+  0, // Ki
+  0, // Kd
+  0, // Turn Kp
+  0, // Ki
+  0  // Kd
+);
+
+void auton_debug()
+{
+  chassis.move(10);
+}
 
 void autonomous()
 {
   chassis.start(); // Start chassis task
 
+  // Negative (-) cases are connected to Red Alliance autons
+  // Positive cases are connected to Blue Alliance autons
+  // 0 is debug
   switch (selected_auton) {
     case -4:
       break;
@@ -205,7 +218,7 @@ void autonomous()
     case -1:
       break;
     case 0:
-      break;
+      auton_debug();
     case 1:
       break;
     case 2:
