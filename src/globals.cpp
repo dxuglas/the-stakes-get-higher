@@ -10,14 +10,14 @@ const double wheel_diameter = 3.25;
 const double wheel_circ = 3.14159 * wheel_diameter;
 
 /* Autonomous */
-int selected_auton = 0;
+int selected_auton = -1;
 
 /////////////////
 /////DEVICES/////
 /////////////////
 
 /* Sensors */
-#define PORT_IMU 1
+#define PORT_IMU 19
 #define PORT_LIFT_POT 'A'
 /* Pneumatics */
 #define PORT_GOAL_CLAMP 'H'

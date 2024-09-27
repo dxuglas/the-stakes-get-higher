@@ -13,7 +13,7 @@ public:
   double turn_kd = 0;
 
   int integral_bound = 3; // Error boundary where integral comes into effect
-  int integral_limit = 200; // Limit to prevent integral windup
+  int integral_limit = 150; // Limit to prevent integral windup
 
   bool enabled = true;
 
@@ -29,14 +29,28 @@ public:
     turn_kd = turn_d;
   }
 
-  void start()
-  { // Intialise the Controller Task
-    pros::Task chassis_task(trampoline, this, "Chassis");
+  void update()
+  { // Run chassis controller updates here
+    int linear_velocity = linear_controller();
+    int angular_velocity = angular_controller();
+
+    if (drive_turn_toggle)
+    {
+      drive_left.move_voltage(linear_velocity);
+      drive_right.move_voltage(linear_velocity);
+    }
+    else
+    {
+      drive_left.move_voltage(+angular_velocity);
+      drive_right.move_voltage(-angular_velocity);
+    }
   }
+
 
   void turn_relative(double degrees)
   { // Turn relative to the current heading (in degrees)
     turn_reset = true;
+    drive_turn_toggle = false;
     angle = degrees;
     while (abs(turn_error) > 1)
     {
@@ -48,6 +62,8 @@ public:
   { // Turn to an absolute heading (in degrees)
     double degrees;
     double difference = imu.get_heading() - heading;
+    turn_reset = true;
+    drive_turn_toggle = false;
 
     if (difference < -180)
     {
@@ -72,6 +88,7 @@ public:
   void move(double distance_in_inches)
   { // Move the drive a set distance
     drive_reset = true;
+    drive_turn_toggle = true;
     distance = distance_in_inches;
     while (abs(drive_error) > 1)
     {
@@ -90,44 +107,23 @@ public:
   }
 
 private:
-  int drive_error;
+  int drive_error = 0;
   int drive_last_error = 0;
   int drive_integral = 0;
-  int drive_derivative;
-  double distance;
+  int drive_derivative = 0;
+  double distance = 0;
 
   bool drive_reset = true;
 
-  int turn_error;
+  int turn_error = 0;
   int turn_last_error = 0;
   int turn_integral = 0;
   int turn_derivative = 0;
-  int angle;
+  int angle = 0;
 
   bool turn_reset = true;
 
-  static void trampoline(void *iparam)
-  { // Wrapper of update method for task
-    if (iparam)
-    {
-      ChassisController *that = static_cast<ChassisController *>(iparam);
-      that->update();
-      pros::Task::delay(10);
-    }
-  }
-
-  void update()
-  { // Main task loop for controller updates
-    while (enabled)
-    {
-      // Run chassis controller updates here
-      int linear_velocity = linear_controller();
-      int angular_velocity = angular_controller();
-
-      drive_left.move_voltage(linear_velocity - angular_velocity);
-      drive_right.move_voltage(linear_velocity + angular_velocity);
-    }
-  }
+  bool drive_turn_toggle = false;
 
   int sign_value(int value)
   { // Get sign (+/-) of value
@@ -144,14 +140,16 @@ private:
     }
 
     // Get average drive position from position vector and convert to inches from degrees
-    std::vector<double> drive_position = drive.get_position_all();
-    double drive_average_position = std::accumulate(drive_position.begin(),
-                                                    drive_position.end(), 0LL) /
-                                    drive_position.size();
+    double drive_average_position = (drive_left_back.get_position() + 
+                                    drive_left_mid.get_position() +
+                                    drive_left_front.get_position() +
+                                    drive_right_back.get_position() +
+                                    drive_right_mid.get_position() +
+                                    drive_right_front.get_position()) / 18;
 
-    double drive_position_in_inches = (wheel_circ / 360) * drive_average_position;
+    double drive_position_in_inches = (drive_average_position * gear_ratio) / 360 * wheel_circ;
 
-    drive_error = drive_position_in_inches - distance;
+    drive_error = distance - drive_position_in_inches;
     drive_derivative = drive_error - drive_last_error;
     drive_last_error = drive_error;
 
@@ -170,9 +168,10 @@ private:
     { // Reset controller zero position on turn call
       imu.tare_rotation();
       turn_reset = false;
+      pros::Task::delay(10);
     }
 
-    turn_error = imu.get_rotation() - angle;
+    turn_error = angle - imu.get_rotation();
     turn_derivative = turn_error - turn_last_error;
     turn_last_error = turn_error;
 
@@ -188,22 +187,35 @@ private:
 
 // Primary chassis controller for autonomous functions
 ChassisController chassis(
-  0, // Drive Kp 
+  1000, // Drive Kp 
   0, // Ki
   0, // Kd
-  0, // Turn Kp
-  0, // Ki
-  0  // Kd
+  92, // Turn Kp
+  2.8, // Ki
+  12  // Kd
 );
 
 void auton_debug()
 {
-  chassis.move(10);
+  chassis.move(12);
+}
+
+void red_line_goal()
+{
+  chassis.move(-39);
+}
+
+void chassis_task_loop(void* param)
+{
+  while (chassis.enabled) {
+    chassis.update();
+    pros::delay(10);
+  }
 }
 
 void autonomous()
 {
-  chassis.start(); // Start chassis task
+  pros::Task chassis_task(chassis_task_loop, (void*)"Chasis" ,"Chassis");
 
   // Negative (-) cases are connected to Red Alliance autons
   // Positive cases are connected to Blue Alliance autons
@@ -216,7 +228,7 @@ void autonomous()
     case -2:
       break;
     case -1:
-      break;
+      red_line_goal();
     case 0:
       auton_debug();
     case 1:
