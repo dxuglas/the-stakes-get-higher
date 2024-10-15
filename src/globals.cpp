@@ -5,12 +5,13 @@
 /////////////////
 
 /* Chassis Info */
-const double gear_ratio = (5 / 3);
-const double wheel_diameter = 3.25;
+const double gear_ratio = (5/3);
+const double wheel_diameter = 3.18;
 const double wheel_circ = 3.14159 * wheel_diameter;
 
 /* Autonomous */
-int selected_auton = -1;
+int selected_auton = 0;
+int alliance = -1;
 
 /////////////////
 /////DEVICES/////

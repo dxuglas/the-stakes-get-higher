@@ -1,4 +1,5 @@
 #include "main.h"
+#include "auton.h"
 
 // Controls
 #define INTAKE_FORWARD pros::E_CONTROLLER_DIGITAL_R1
@@ -6,13 +7,19 @@
 #define LIFT_UP pros::E_CONTROLLER_DIGITAL_L1
 #define LIFT_DOWN pros::E_CONTROLLER_DIGITAL_L2
 #define GOAL_CLAMP pros::E_CONTROLLER_DIGITAL_B
-#define DRIVE_DIRECTION pros::E_CONTROLLER_DIGITAL_DOWN
+#define DRIVE_DIRECTION pros::E_CONTROLLER_DIGITAL_A
 #define DRIVE_LEFT pros::E_CONTROLLER_ANALOG_LEFT_Y
 #define DRIVE_RIGHT pros::E_CONTROLLER_ANALOG_RIGHT_Y
 
 class Controls {
 	public:
-		void update() {
+		Controls()
+		{
+			master.set_text(0, 0, "Drive: Forward");
+		}
+
+		void update() 
+		{
 			update_drive();
 			update_intake();
 			update_lift();
@@ -23,8 +30,10 @@ class Controls {
 		int left_joystick_dead_zone = 10;
 		int right_joystick_dead_zone = 10;
 
-		void update_drive() {
-			if (master.get_digital_new_press(DRIVE_DIRECTION)) {
+		void update_drive() 
+		{
+			if (master.get_digital_new_press(DRIVE_DIRECTION)) 
+			{
 				// Set drive direction to inverse if button toggle is pressed
 				drive_direction *= -1;
 				std::string controller_text = drive_direction > 0 ? "Drive: Forward" : "Drive: Reverse";
@@ -41,36 +50,52 @@ class Controls {
 			drive_right.move(right_y * drive_direction); // Right drive velocity
 		}
 
-		void update_intake() {
-			if (master.get_digital(INTAKE_FORWARD)) {
+		void update_intake() 
+		{
+			if (master.get_digital(INTAKE_FORWARD)) 
+			{
 				intake.move(127);
-			} else if (master.get_digital(INTAKE_REVERSE)) {
+			} 
+			else if (master.get_digital(INTAKE_REVERSE)) 
+			{
 				intake.move(-127);
-			} else {
+			} 
+			else 
+			{
 				intake.move(0);
 			}
 		}
 
-		void update_lift() {
-			if (master.get_digital(LIFT_UP)) {
+		void update_lift() 
+		{
+			if (master.get_digital(LIFT_UP)) 
+			{
 				lift.move(127);
-			} else if (master.get_digital(LIFT_DOWN)) {
+			} 
+			else if (master.get_digital(LIFT_DOWN)) 
+			{
 				lift.move(-127);
-			} else {
+			} 
+			else 
+			{
 				lift.move(0);
 			}
 		}
 
-		void update_clamp () {
-			if (master.get_digital_new_press(GOAL_CLAMP)) {
+		void update_clamp () 
+		{
+			if (master.get_digital_new_press(GOAL_CLAMP)) 
+			{
 				goal_clamp.toggle();
 			}
 		}
 };
 
-void opcontrol() {
+void opcontrol() 
+{
 	Controls controls;
- 	while (true) {
+ 	while (true) 
+	{
 		controls.update();
 		pros::delay(5);
 	}
