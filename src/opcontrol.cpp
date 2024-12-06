@@ -4,8 +4,8 @@
 // Controls
 #define INTAKE_FORWARD pros::E_CONTROLLER_DIGITAL_R1
 #define INTAKE_REVERSE pros::E_CONTROLLER_DIGITAL_R2
-#define LIFT_UP pros::E_CONTROLLER_DIGITAL_L1
-#define LIFT_DOWN pros::E_CONTROLLER_DIGITAL_L2
+#define ARM_UP pros::E_CONTROLLER_DIGITAL_L1
+#define ARM_DOWN pros::E_CONTROLLER_DIGITAL_L2
 #define GOAL_CLAMP pros::E_CONTROLLER_DIGITAL_B
 #define DRIVE_DIRECTION pros::E_CONTROLLER_DIGITAL_A
 #define DRIVE_LEFT pros::E_CONTROLLER_ANALOG_LEFT_Y
@@ -22,7 +22,7 @@ class Controls {
 		{
 			update_drive();
 			update_intake();
-			update_lift();
+			update_arm();
 			update_clamp();
 		}
 	private:
@@ -46,8 +46,8 @@ class Controls {
 			if (abs(left_y) < left_joystick_dead_zone) left_y = 0; // Left dead zone
 			if (abs(right_y) < right_joystick_dead_zone) right_y = 0; // Right dead zone
 			
-			drive_left.move(left_y * drive_direction); // Left drive velocity
-			drive_right.move(right_y * drive_direction); // Right drive velocity
+			drive_left.move(drive_direction > 0 ? left_y : -right_y); // Left drive velocity
+			drive_right.move(drive_direction > 0 ? right_y : -left_y); // Right drive velocity
 		}
 
 		void update_intake() 
@@ -66,23 +66,23 @@ class Controls {
 			}
 		}
 
-		void update_lift() 
+		void update_arm() 
 		{
-			if (master.get_digital(LIFT_UP)) 
+			if (master.get_digital(ARM_UP)) 
 			{
-				lift.move(127);
+				arm.move(127);
 			} 
-			else if (master.get_digital(LIFT_DOWN)) 
+			else if (master.get_digital(ARM_DOWN)) 
 			{
-				lift.move(-127);
+				arm.move(-127);
 			} 
 			else 
 			{
-				lift.move(0);
+				arm.move(0);
 			}
 		}
 
-		void update_clamp () 
+		void update_clamp() 
 		{
 			if (master.get_digital_new_press(GOAL_CLAMP)) 
 			{

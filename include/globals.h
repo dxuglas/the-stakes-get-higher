@@ -25,7 +25,7 @@ extern pros::adi::Pneumatics goal_clamp, intake_riser;
 /* Motors */
 extern  pros::Motor drive_left_front, drive_left_mid, drive_left_back, 
         drive_right_front, drive_right_mid, drive_right_back,
-        lift, intake;
+        arm, intake;
 
 extern pros::MotorGroup drive_left, drive_right, drive;
 

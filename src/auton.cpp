@@ -206,44 +206,38 @@ void auton_debug()
 
 void red_right_close_goal()
 {
-  chassis.move(-20);
+  chassis.move(-14);
+  chassis.move(-6);
+  chassis.move(-6);
   pros::delay(300);
   goal_clamp.toggle();
   pros::delay(500);
   chassis.turn_relative(-75);
   intake.move(127);
   chassis.move(10);
-  chassis.move(2);
+  chassis.move(4);
   pros::delay(3000);
-  chassis.turn_relative(160);
+  chassis.turn_relative(-130);
   pros::delay(200);
   chassis.move(24);
 }
 
 void red_left_close_goal()
 {
-  chassis.move(-20);
+  chassis.move(-14);
+  chassis.move(-6);
+  chassis.move(-6);
   pros::delay(300);
   goal_clamp.toggle();
   pros::delay(500);
   chassis.turn_relative(75);
   intake.move(127);
   chassis.move(10);
-  chassis.move(2);
+  chassis.move(4);
   pros::delay(3000);
-  chassis.turn_relative(160);
+  chassis.turn_relative(170);
   pros::delay(200);
   chassis.move(24);
-  // pros::delay(2000);
-  // chassis.turn_relative(-157);
-  // pros::delay(500);
-  // chassis.move(30);
-  // chassis.move(10);
-  // pros::delay(1200);
-  // intake.move(-127);
-  // pros::delay(1000);
-  // intake.move(127);
-  // chassis.move(12);
 }
 
 void red_line_goal()
@@ -259,14 +253,16 @@ void red_line_goal()
 
 void blue_left_close_goal()
 {
-  chassis.move(-20);
+  chassis.move(-14);
+  chassis.move(-6);
+  chassis.move(-6);
   pros::delay(300);
   goal_clamp.toggle();
   pros::delay(500);
   chassis.turn_relative(75);
   intake.move(127);
   chassis.move(10);
-  chassis.move(2);
+  chassis.move(4);
   pros::delay(3000);
   chassis.turn_relative(160);
   pros::delay(200);
@@ -276,16 +272,18 @@ void blue_left_close_goal()
 
 void blue_right_close_goal()
 {
-  chassis.move(-20);
+  chassis.move(-14);
+  chassis.move(-6);
+  chassis.move(-6);
   pros::delay(300);
   goal_clamp.toggle();
   pros::delay(500);
   chassis.turn_relative(-75);
   intake.move(127);
   chassis.move(10);
-  chassis.move(2);
+  chassis.move(4);
   pros::delay(3000);
-  chassis.turn_relative(160);
+  chassis.turn_relative(-170);
   pros::delay(200);
   chassis.move(24);
 }
@@ -311,15 +309,12 @@ void autonomous()
     case -4:
       break;
     case -3:
-      master.set_text(0,0,"redrightclose");
       red_right_close_goal();
       break;
     case -2:
-      master.set_text(0,0,"redleftclose");
       red_left_close_goal();
       break;
     case -1:
-      master.set_text(0,0,"redline");
       red_line_goal();
       break;
     case 0:
@@ -327,7 +322,6 @@ void autonomous()
     case 1:
       break;
     case 2:
-      master.set_text(0,0,"leftclose");
       blue_left_close_goal();
       break;
     case 3:

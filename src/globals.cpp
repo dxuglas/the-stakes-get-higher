@@ -19,7 +19,7 @@ int alliance = -1;
 
 /* Sensors */
 #define PORT_IMU 19
-#define PORT_LIFT_POT 'A'
+#define PORT_LIFT_POT 'G'
 /* Pneumatics */
 #define PORT_GOAL_CLAMP 'H'
 #define PORT_INTAKE_RISER 'C'
@@ -31,7 +31,7 @@ int alliance = -1;
 #define PORT_DRIVE_RIGHT_MID 2
 #define PORT_DRIVE_RIGHT_BACK 1
 #define PORT_INTAKE 20
-#define PORT_LIFT 7
+#define PORT_ARM 18
 
 /* Master */
 pros::Controller master(pros::E_CONTROLLER_MASTER);
@@ -52,7 +52,7 @@ pros::Motor drive_right_front(PORT_DRIVE_RIGHT_FRONT);
 pros::Motor drive_right_mid(PORT_DRIVE_RIGHT_MID);
 pros::Motor drive_right_back(PORT_DRIVE_RIGHT_BACK);
 pros::Motor intake(PORT_INTAKE);
-pros::Motor lift(PORT_LIFT);
+pros::Motor arm(PORT_ARM);
 
 pros::MotorGroup drive_left({PORT_DRIVE_LEFT_FRONT, 
                              PORT_DRIVE_LEFT_MID,
