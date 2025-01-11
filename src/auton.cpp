@@ -47,11 +47,13 @@ public:
       drive_left.move_voltage(+angular_velocity);
       drive_right.move_voltage(-angular_velocity);
     }
+    time_exit--;
   }
 
 
   void turn_relative(double degrees)
   { // Turn relative to the current heading (in degrees)
+    time_exit = 100;
     turn_reset = true;
     drive_turn_toggle = false;
     angle = degrees;
@@ -59,6 +61,10 @@ public:
     while (abs(turn_error) > 1)
     {
       pros::Task::delay(1);
+      if (time_exit < 0)
+      {
+        break;
+      }
     }
   }
 
@@ -90,15 +96,21 @@ public:
     }
   }
 
-  void move(double distance_in_inches)
+  void move(double distance_in_inches, double speed_percent = 100)
   { // Move the drive a set distance
+    time_exit = 100;
     drive_reset = true;
     drive_turn_toggle = true;
     distance = distance_in_inches;
+    max_voltage_percent = speed_percent / 100;
     drive_error = 2;
     while (abs(drive_error) > 1)
     {
       pros::Task::delay(1);
+      if (time_exit < 0)
+      {
+        break;
+      }
     }
   }
 
@@ -118,6 +130,7 @@ private:
   int drive_integral = 0;
   int drive_derivative = 0;
   double distance = 0;
+  double max_voltage_percent = 1;
 
   bool drive_reset = true;
 
@@ -128,6 +141,7 @@ private:
   int angle = 0;
 
   bool turn_reset = true;
+  int time_exit = 100;
 
   bool drive_turn_toggle = false;
 
@@ -163,7 +177,9 @@ private:
     // If integral is above it's limit, decrease it to limit. 
     drive_integral = abs(drive_integral) > integral_limit ? sign_value(drive_integral) * integral_limit : drive_integral;
 
-    return drive_error * drive_kp + drive_integral * drive_ki + drive_derivative * drive_kd;
+    double output_voltage = drive_error * drive_kp + drive_integral * drive_ki + drive_derivative * drive_kd; 
+
+    return output_voltage * max_voltage_percent;
   }
 
   int angular_controller()
@@ -204,23 +220,60 @@ void auton_debug()
 
 }
 
-void red_right_close_goal()
+void red_right_close_goal_wall_stake()
 {
-  chassis.move(-14);
-  chassis.move(-6);
-  chassis.move(-6);
-  pros::delay(300);
+  chassis.move(-24, 35);
+  pros::delay(400);
   goal_clamp.toggle();
+  pros::delay(100);
+  intake.move(127);
+  pros::delay(700);
+  chassis.turn_relative(-65);
+  chassis.move(14, 70);
+  while (intake_distance.get_distance() > 100) 
+	{
+		intake.move(127);
+	} 
+  intake.move(0);
+  pros::delay(200);
+  while (intake_distance.get_distance() < 100)
+  {
+  intake.move(-80);
+  }
+  pros::delay(1000);
+  intake.move(0);
+  chassis.turn_relative(140);
+  chassis.move(48);
+  pros::delay(200);
+  chassis.move(-8);
+  arm.move(127);
   pros::delay(500);
-  chassis.turn_relative(-75);
+  chassis.turn_relative(-60);
+  pros::delay(600);
   intake.move(127);
   chassis.move(10);
-  chassis.move(4);
+  arm.move(-30);
+  intake.move(0);
+  pros::delay(1000);
+  arm.move(0);
+  chassis.move(-16);
+}
+
+void red_right_close_goal_ladder_touch()
+{
+  chassis.move(-24, 40);
+  pros::delay(400);
+  goal_clamp.toggle();
+  intake.move(127);
+  pros::delay(700);
+  chassis.turn_relative(-65);
+  chassis.move(14, 70);
   pros::delay(3000);
-  chassis.turn_relative(-130);
+  chassis.turn_relative(-160);
   pros::delay(200);
   chassis.move(24);
 }
+
 
 void red_left_close_goal()
 {
@@ -307,9 +360,10 @@ void autonomous()
   // 0 is debug
   switch (selected_auton) {
     case -4:
+      red_right_close_goal_wall_stake();
       break;
     case -3:
-      red_right_close_goal();
+      red_right_close_goal_ladder_touch();
       break;
     case -2:
       red_left_close_goal();

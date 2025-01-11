@@ -19,10 +19,10 @@ int alliance = -1;
 
 /* Sensors */
 #define PORT_IMU 19
-#define PORT_LIFT_POT 'G'
+#define PORT_INTAKE_DISTANCE 16
 /* Pneumatics */
 #define PORT_GOAL_CLAMP 'H'
-#define PORT_INTAKE_RISER 'C'
+#define PORT_SWEEPER 'G'
 /* Motors */
 #define PORT_DRIVE_LEFT_FRONT -13
 #define PORT_DRIVE_LEFT_MID -12
@@ -38,11 +38,11 @@ pros::Controller master(pros::E_CONTROLLER_MASTER);
 
 /* Sensors */
 pros::IMU imu(PORT_IMU);
-pros::adi::Potentiometer lift_pot(PORT_LIFT_POT);
+pros::Distance intake_distance(PORT_INTAKE_DISTANCE);
 
 /* Pneumatics */
 pros::adi::Pneumatics goal_clamp(PORT_GOAL_CLAMP, false);
-pros::adi::Pneumatics intake_riser(PORT_INTAKE_RISER, false);
+pros::adi::Pneumatics sweeper(PORT_SWEEPER, false);
 
 /* Motors */
 pros::Motor drive_left_front(PORT_DRIVE_LEFT_FRONT);

@@ -17,10 +17,10 @@ extern pros::Controller master;
 
 /* Sensors */
 extern pros::IMU imu;
-extern pros::adi::Potentiometer lift_pot;
+extern pros::Distance intake_distance;
 
 /* Pneumatics */
-extern pros::adi::Pneumatics goal_clamp, intake_riser;
+extern pros::adi::Pneumatics goal_clamp, sweeper;
 
 /* Motors */
 extern  pros::Motor drive_left_front, drive_left_mid, drive_left_back, 
