@@ -229,30 +229,29 @@ void red_right_close_goal_wall_stake()
   intake.move(127);
   pros::delay(700);
   chassis.turn_relative(-65);
-  chassis.move(14, 70);
-  while (intake_distance.get_distance() > 100) 
+  chassis.move(15, 70);
+  while (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 50)  
 	{
 		intake.move(127);
 	} 
   intake.move(0);
-  pros::delay(200);
   while (intake_distance.get_distance() < 100)
   {
   intake.move(-80);
   }
-  pros::delay(1000);
+  pros::delay(2000);
   intake.move(0);
   chassis.turn_relative(140);
   chassis.move(48);
   pros::delay(200);
-  chassis.move(-8);
+  chassis.move(-7);
   arm.move(127);
   pros::delay(500);
-  chassis.turn_relative(-60);
+  chassis.turn_relative(-59);
   pros::delay(600);
   intake.move(127);
-  chassis.move(10);
-  arm.move(-30);
+  chassis.move(11);
+  arm.move(-127);
   intake.move(0);
   pros::delay(1000);
   arm.move(0);
@@ -274,71 +273,105 @@ void red_right_close_goal_ladder_touch()
   chassis.move(24);
 }
 
-
-void red_left_close_goal()
+void red_left_close_goal_ladder_touch()
 {
-  chassis.move(-14);
-  chassis.move(-6);
-  chassis.move(-6);
-  pros::delay(300);
+  chassis.move(-24, 40);
+  pros::delay(400);
   goal_clamp.toggle();
-  pros::delay(500);
-  chassis.turn_relative(75);
+  pros::delay(200);
   intake.move(127);
-  chassis.move(10);
-  chassis.move(4);
-  pros::delay(3000);
-  chassis.turn_relative(170);
-  pros::delay(200);
-  chassis.move(24);
-}
-
-void red_line_goal()
-{
-  chassis.move(-38);
-  pros::delay(200);
-  goal_clamp.toggle();  
+  pros::delay(700);
+  chassis.turn_relative(65);
+  chassis.move(14, 70);
+  pros::delay(2000);
+  chassis.turn_relative(70);
+  chassis.move(12, 70);
   pros::delay(1000);
-  // chassis.move(34);
-  // pros::delay(700);
-  // intake.move(127);
+  chassis.move(-12, 70);
+  pros::delay(1000);
+  chassis.turn_relative(-20);
+  chassis.move(15, 70);
+  pros::delay(1000);
+  chassis.move(-15, 70);
+  chassis.turn_relative(100);
+  chassis.move(30, 70);
 }
 
-void blue_left_close_goal()
+void blue_left_close_goal_wall_stake()
 {
-  chassis.move(-14);
-  chassis.move(-6);
-  chassis.move(-6);
-  pros::delay(300);
+  chassis.move(-24, 35);
+  pros::delay(400);
   goal_clamp.toggle();
-  pros::delay(500);
-  chassis.turn_relative(75);
+  pros::delay(100);
   intake.move(127);
-  chassis.move(10);
-  chassis.move(4);
-  pros::delay(3000);
-  chassis.turn_relative(160);
+  pros::delay(700);
+  chassis.turn_relative(65);
+  chassis.move(15, 70);
+  while (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 50)  
+	{
+		intake.move(127);
+	} 
+  intake.move(0);
+  while (intake_distance.get_distance() < 100)
+  {
+  intake.move(-80);
+  }
+  pros::delay(2000);
+  intake.move(0);
+  chassis.turn_relative(-140);
+  chassis.move(48);
   pros::delay(200);
-  chassis.move(24);
-  
+  chassis.move(-7);
+  arm.move(127);
+  pros::delay(500);
+  chassis.turn_relative(59);
+  pros::delay(600);
+  intake.move(127);
+  chassis.move(11);
+  arm.move(-127);
+  intake.move(0);
+  pros::delay(1000);
+  arm.move(0);
+  chassis.move(-16);
 }
 
-void blue_right_close_goal()
+void blue_left_close_goal_ladder_touch()
 {
-  chassis.move(-14);
-  chassis.move(-6);
-  chassis.move(-6);
-  pros::delay(300);
+  chassis.move(-24, 40);
+  pros::delay(400);
   goal_clamp.toggle();
-  pros::delay(500);
-  chassis.turn_relative(-75);
   intake.move(127);
-  chassis.move(10);
-  chassis.move(4);
+  pros::delay(700);
+  chassis.turn_relative(65);
+  chassis.move(14, 70);
   pros::delay(3000);
-  chassis.turn_relative(-170);
+  chassis.turn_relative(-160);
   pros::delay(200);
   chassis.move(24);
+}
+
+void blue_right_close_goal_ladder_touch()
+{
+  chassis.move(-24, 40);
+  pros::delay(400);
+  goal_clamp.toggle();
+  pros::delay(200);
+  intake.move(127);
+  pros::delay(700);
+  chassis.turn_relative(-65);
+  chassis.move(14, 70);
+  pros::delay(2000);
+  chassis.turn_relative(-70);
+  chassis.move(12, 70);
+  pros::delay(1000);
+  chassis.move(-12, 70);
+  pros::delay(1000);
+  chassis.turn_relative(20);
+  chassis.move(15, 70);
+  pros::delay(1000);
+  chassis.move(-15, 70);
+  chassis.turn_relative(-100);
+  chassis.move(30, 70);
 }
 
 void chassis_task_loop(void* param)
@@ -353,35 +386,32 @@ void autonomous()
 {
   pros::Task chassis_task(chassis_task_loop, (void*)"Chasis" ,"Chassis");
 
-  selected_auton *= alliance;
+  // selected_auton *= alliance;
+  selected_auton = 1;
 
   // Negative (-) cases are connected to Red Alliance autons
   // Positive cases are connected to Blue Alliance autons
   // 0 is debug
   switch (selected_auton) {
-    case -4:
+    case -3:
       red_right_close_goal_wall_stake();
       break;
-    case -3:
+    case -2:
       red_right_close_goal_ladder_touch();
       break;
-    case -2:
-      red_left_close_goal();
-      break;
     case -1:
-      red_line_goal();
+      red_left_close_goal_ladder_touch();
       break;
     case 0:
       auton_debug();
     case 1:
+      blue_right_close_goal_ladder_touch();
       break;
     case 2:
-      blue_left_close_goal();
+      blue_left_close_goal_ladder_touch();
       break;
     case 3:
-      blue_right_close_goal();
-      break;
-    case 4:
+      blue_left_close_goal_wall_stake();
       break;
   }
 }

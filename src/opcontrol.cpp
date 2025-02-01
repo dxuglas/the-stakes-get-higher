@@ -93,19 +93,17 @@ class Controls {
 			{
 				if (intake_into_bin)
 				{
-					if (intake_distance.get_distance() > 100) 
+					if (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 50) 
 					{
 						intake.move(127);
 					} 
 					else 
 					{
-						intake.move(0);
-						pros::delay(200);
 						while (intake_distance.get_distance() < 100)
 						{
 							intake.move(-80);
 						}
-						pros::delay(1000);
+						pros::delay(2000);
 					}
 				}
 				else
