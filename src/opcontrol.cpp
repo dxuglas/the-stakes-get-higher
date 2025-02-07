@@ -93,9 +93,9 @@ class Controls {
 			{
 				if (intake_into_bin)
 				{
-					if (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 50) 
+					if (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 30) 
 					{
-						intake.move(127);
+						intake.move(100);
 					} 
 					else 
 					{

@@ -30,7 +30,8 @@ int alliance = -1;
 #define PORT_DRIVE_RIGHT_FRONT 3
 #define PORT_DRIVE_RIGHT_MID 2
 #define PORT_DRIVE_RIGHT_BACK 1
-#define PORT_INTAKE 20
+#define PORT_INTAKE_RIGHT 20
+#define PORT_INTAKE_LEFT -17
 #define PORT_ARM 18
 
 /* Master */
@@ -51,7 +52,8 @@ pros::Motor drive_left_back(PORT_DRIVE_LEFT_BACK);
 pros::Motor drive_right_front(PORT_DRIVE_RIGHT_FRONT);
 pros::Motor drive_right_mid(PORT_DRIVE_RIGHT_MID);
 pros::Motor drive_right_back(PORT_DRIVE_RIGHT_BACK);
-pros::Motor intake(PORT_INTAKE);
+pros::Motor intake_right(PORT_INTAKE_RIGHT);
+pros::Motor intake_left(PORT_INTAKE_LEFT);
 pros::Motor arm(PORT_ARM);
 
 pros::MotorGroup drive_left({PORT_DRIVE_LEFT_FRONT, 
@@ -66,3 +68,5 @@ pros::MotorGroup drive({PORT_DRIVE_LEFT_FRONT,
                         PORT_DRIVE_RIGHT_FRONT, 
                         PORT_DRIVE_RIGHT_MID,
                         PORT_DRIVE_RIGHT_BACK});
+pros::MotorGroup intake({PORT_INTAKE_RIGHT,
+                        PORT_INTAKE_LEFT});

@@ -25,8 +25,8 @@ extern pros::adi::Pneumatics goal_clamp, sweeper;
 /* Motors */
 extern  pros::Motor drive_left_front, drive_left_mid, drive_left_back, 
         drive_right_front, drive_right_mid, drive_right_back,
-        arm, intake;
+        arm, intake_right, intake_left;
 
-extern pros::MotorGroup drive_left, drive_right, drive;
+extern pros::MotorGroup drive_left, drive_right, drive, intake;
 
 #endif

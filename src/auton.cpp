@@ -70,6 +70,7 @@ public:
 
   void turn_absolute(double heading)
   { // Turn to an absolute heading (in degrees)
+    time_exit = 200;
     double degrees;
     double difference = imu.get_heading() - heading;
     turn_reset = true;
@@ -93,6 +94,10 @@ public:
     while (abs(turn_error) > 1)
     {
       pros::Task::delay(1);
+      if (time_exit < 0)
+      {
+        break;
+      }
     }
   }
 
@@ -215,9 +220,89 @@ ChassisController chassis(
   2.5  // Kd
 );
 
-void auton_debug()
+void programming_skills()
 {
-
+  // FILL FIRST GOAL
+  chassis.move(-4, 70);
+  goal_clamp.toggle();
+  pros::delay(400);
+  intake.move(127);
+  pros::delay(700);
+  chassis.move(-6.5, 100);
+  chassis.turn_relative(-57);
+  chassis.move(10, 70);
+  chassis.move(8, 50);
+  pros::delay(200);
+  chassis.move(10, 70);
+  chassis.move(8, 50);
+  pros::delay(800);
+  chassis.move(-20, 100);
+  pros::delay(100);
+  chassis.turn_relative(46);
+  pros::delay(100);
+  chassis.move(4, 80);
+  chassis.move(12, 50);
+  pros::delay(1000);
+  chassis.move(-12, 100);
+  chassis.turn_relative(-86);
+  chassis.move(12, 100);
+  chassis.move(8, 50);
+  pros::delay(800);
+  chassis.move(-12, 100);
+  pros::delay(1200);
+  intake.move(-127);
+  chassis.turn_relative(-79);
+  pros::delay(1200);
+  intake.move(127);
+  chassis.move(15, 50);
+  pros::delay(1000);
+  chassis.turn_relative(-10);
+  chassis.move(-40, 90);
+  goal_clamp.toggle();
+  chassis.move(10, 100);
+  chassis.turn_relative(-45);
+  goal_clamp.toggle();
+  intake.move(0);
+  chassis.move(-30, 40);
+  chassis.move(30, 100);
+  chassis.turn_relative(90);
+  chassis.move(-30, 40);
+  chassis.move(10, 100);
+  chassis.turn_relative(90);
+  goal_clamp.toggle();
+  chassis.move(-30, 70);
+  chassis.move(-12, 50);
+  pros::delay(500);
+  goal_clamp.toggle();
+  pros::delay(300);
+  intake.move(127);
+  chassis.turn_relative(-90);
+  chassis.move(12, 70);
+  chassis.move(12, 50);
+  pros::delay(1200);
+  chassis.turn_relative(-85);
+  chassis.move(12, 70);
+  chassis.move(12, 50);
+  pros::delay(800);
+  chassis.turn_relative(-85);
+  chassis.move(10, 70);
+  chassis.move(8, 50);
+  pros::delay(200);
+  chassis.move(10, 70);
+  chassis.move(8, 50);
+  pros::delay(800);
+  chassis.move(-20, 100);
+  pros::delay(100);
+  chassis.turn_relative(50);
+  pros::delay(100);
+  chassis.move(4, 80);
+  chassis.move(12, 50);
+  pros::delay(1000);
+  chassis.move(-10, 70);
+  chassis.turn_relative(150);
+  chassis.move(-30, 70);
+  goal_clamp.toggle();
+  chassis.move(10, 50);
 }
 
 void red_right_close_goal_wall_stake()
@@ -230,9 +315,9 @@ void red_right_close_goal_wall_stake()
   pros::delay(700);
   chassis.turn_relative(-65);
   chassis.move(15, 70);
-  while (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 50)  
+  while (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 30)  
 	{
-		intake.move(127);
+		intake.move(100);
 	} 
   intake.move(0);
   while (intake_distance.get_distance() < 100)
@@ -307,9 +392,9 @@ void blue_left_close_goal_wall_stake()
   pros::delay(700);
   chassis.turn_relative(65);
   chassis.move(15, 70);
-  while (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 50)  
+  while (intake_distance.get_distance() > 100 || intake_distance.get_distance() < 30)  
 	{
-		intake.move(127);
+		intake.move(100);
 	} 
   intake.move(0);
   while (intake_distance.get_distance() < 100)
@@ -403,12 +488,13 @@ void autonomous()
       red_left_close_goal_ladder_touch();
       break;
     case 0:
-      auton_debug();
+      programming_skills();
+      break;
     case 1:
-      blue_right_close_goal_ladder_touch();
+      blue_left_close_goal_ladder_touch();
       break;
     case 2:
-      blue_left_close_goal_ladder_touch();
+      blue_right_close_goal_ladder_touch();
       break;
     case 3:
       blue_left_close_goal_wall_stake();

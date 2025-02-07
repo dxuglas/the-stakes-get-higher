@@ -94,7 +94,7 @@ void ui_event_auton_1_btn(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
         auton_1_selected(e);
-        _ui_label_set_property(ui_selected_auton, _UI_LABEL_PROPERTY_TEXT, "Line Goal Selected");
+        _ui_label_set_property(ui_selected_auton, _UI_LABEL_PROPERTY_TEXT, "Left Close Goal Selected");
     }
 }
 void ui_event_auton_2_btn(lv_event_t * e)
@@ -103,7 +103,7 @@ void ui_event_auton_2_btn(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
         auton_2_selected(e);
-        _ui_label_set_property(ui_selected_auton, _UI_LABEL_PROPERTY_TEXT, "Left Close Goal Selected");
+        _ui_label_set_property(ui_selected_auton, _UI_LABEL_PROPERTY_TEXT, "Right Close Goal Selected");
     }
 }
 void ui_event_auton_3_btn(lv_event_t * e)
@@ -112,7 +112,7 @@ void ui_event_auton_3_btn(lv_event_t * e)
     lv_obj_t * target = lv_event_get_target(e);
     if(event_code == LV_EVENT_CLICKED) {
         auton_3_selected(e);
-        _ui_label_set_property(ui_selected_auton, _UI_LABEL_PROPERTY_TEXT, "Right Close Goal Selected");
+        _ui_label_set_property(ui_selected_auton, _UI_LABEL_PROPERTY_TEXT, "Wall Stake Selected");
     }
 }
 void ui_event_debug_button2(lv_event_t * e)
